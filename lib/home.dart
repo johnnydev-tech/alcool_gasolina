@@ -12,6 +12,8 @@ class _HomeState extends State<Home> {
   String etanolLabel = "";
   String gasolinaLabel = "";
   String _textoResultado = "";
+  String car = "";
+  double value;
   void _calcular() {
     FocusScope.of(context).unfocus();
 
@@ -47,10 +49,12 @@ class _HomeState extends State<Home> {
         if ((precoAlcool / precoGasolina) >= 0.7) {
           setState(() {
             _textoResultado = "Abasteça com\nGasolina!";
+            value = precoGasolina * 58;
           });
         } else {
           setState(() {
             _textoResultado = "Abasteça com\nEtanol!";
+            car = '';
           });
         }
         _limpar();
@@ -70,7 +74,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Etanol ou Gasolina"),
+        title: Text("Etanol ou Gasolina?"),
         centerTitle: true,
         actions: [
           IconButton(
@@ -79,6 +83,7 @@ class _HomeState extends State<Home> {
                   _textoResultado = "";
                   etanolLabel = "";
                   gasolinaLabel = "";
+                  value = null;
                 });
               },
               icon: Icon(Icons.sync))
@@ -90,10 +95,12 @@ class _HomeState extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              Text('BRAVO 2012 - 1.8 16v'),
+              Image.asset('images/logo.jpeg'),
               Padding(
                 padding: EdgeInsets.only(bottom: 20),
                 child: Text(
-                  "Digite po preço por Litro",
+                  "Digite abaixo o preço por Litro",
                   style: TextStyle(color: Colors.grey, fontSize: 18),
                   textAlign: TextAlign.center,
                 ),
@@ -124,7 +131,7 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 30),
               TextField(
-                cursorColor: Colors.green,
+                cursorColor: Colors.red,
                 keyboardType: TextInputType.number,
                 inputFormatters: [maskMoeda],
                 decoration: InputDecoration(
@@ -212,6 +219,13 @@ class _HomeState extends State<Home> {
                                   )
                                 ],
                               ),
+                              Container(
+                                height: 50,
+                                child: VerticalDivider(
+                                  width: 2,
+                                  color: Colors.grey,
+                                ),
+                              ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -260,24 +274,81 @@ class _HomeState extends State<Home> {
                                 end: Alignment.bottomCenter,
                                 colors: [Colors.teal, Colors.greenAccent],
                               )),
-                          child: Row(
+                          child: Column(
                             children: [
-                              Icon(
-                                Icons.local_gas_station,
-                                color: Colors.white,
-                                size: 58,
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  _textoResultado,
-                                  style: TextStyle(
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.local_gas_station,
                                     color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                    size: 58,
                                   ),
-                                ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      _textoResultado,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
+                              value == null
+                                  ? Container()
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 16.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.directions_car,
+                                                color: Colors.white,
+                                                size: 58,
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Para encher o tanque, você gastará:',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      'R\$ ${value.toString()}*',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 34,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Text(
+                                            '* Esse valor leva em consideração a capacidade que consta no manual do veículo, sendo ela 58 litros',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                             ],
                           ),
                         ),
